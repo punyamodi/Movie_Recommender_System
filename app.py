@@ -76,19 +76,19 @@ if st.button('Show Recommendation'):
         st.image(recommended_movie_posters[9])
 
     with col11:
-        st.text(recommended_movie_names[0])
-        st.image(recommended_movie_posters[0])
+        st.text(recommended_movie_names[10])
+        st.image(recommended_movie_posters[10])
     with col12:
-        st.text(recommended_movie_names[1])
-        st.image(recommended_movie_posters[1])
+        st.text(recommended_movie_names[11])
+        st.image(recommended_movie_posters[11])
 
     with col13:
-        st.text(recommended_movie_names[2])
-        st.image(recommended_movie_posters[2])
+        st.text(recommended_movie_names[12])
+        st.image(recommended_movie_posters[12])
     with col14:
-        st.text(recommended_movie_names[3])
-        st.image(recommended_movie_posters[3])
+        st.text(recommended_movie_names[13])
+        st.image(recommended_movie_posters[13])
     with col15:
-        st.text(recommended_movie_names[4])
-        st.image(recommended_movie_posters[4])
+        st.text(recommended_movie_names[14])
+        st.image(recommended_movie_posters[14])
 
