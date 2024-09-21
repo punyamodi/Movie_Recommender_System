@@ -29,7 +29,7 @@ st.header('Movie Recommender System')
 with open('movie_list.pkl', 'rb') as f:
     movies = pd.read_pickle("movie_list.pkl")
 
-similarity = pickle.load(open('movies_dict.pkl','rb'))
+similarity = pickle.load(open('https://drive.google.com/file/d/1HCNOOnP4NgsKPb6qGqfbr-ekjx08VsvI/view?usp=sharing','rb'))
 
 movie_list = movies['title'].values
 selected_movie = st.selectbox(
