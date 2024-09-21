@@ -2,14 +2,37 @@ import pickle
 import streamlit as st
 import requests
 import pandas as pd
+
+# Function to download a file from a URL
+def download_file(url, destination):
+    response = requests.get(url)
+    with open(destination, 'wb') as file:
+        file.write(response.content)
+
+# Google Drive link to 'movies_dict.pkl' (replace with your actual link)
+movies_dict_url = 'https://drive.google.com/uc?export=download&id=1HCNOOnP4NgsKPb6qGqfbr-ekjx08VsvI'
+
+# Local path to save the downloaded file
+movies_dict_path = 'movies_dict.pkl'
+
+# Download the file from Google Drive
+download_file(movies_dict_url, movies_dict_path)
+
+# Load the downloaded pickle file
+with open('movie_list.pkl', 'rb') as f:
+    movies = pd.read_pickle("movie_list.pkl")
+
+with open(movies_dict_path, 'rb') as f:
+    similarity = pickle.load(f)
+
 def fetch_poster(movie_id):
     url = "https://api.themoviedb.org/3/movie/{}?api_key=bfb2634dae4592761658dba50f11ec8f&language=en-US".format(movie_id)
-
-    data = requests.get(url)
-    data = data.json()
-    poster_path = data['poster_path']
-    full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
-    return full_path
+    data = requests.get(url).json()
+    poster_path = data.get('poster_path')
+    if poster_path:
+        full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
+        return full_path
+    return None
 
 def recommend(movie):
     index = movies[movies['title'] == movie].index[0]
@@ -17,78 +40,24 @@ def recommend(movie):
     recommended_movie_names = []
     recommended_movie_posters = []
     for i in distances[1:16]:
-        # fetch the movie poster
         movie_id = movies.iloc[i[0]].movie_id
         recommended_movie_posters.append(fetch_poster(movie_id))
         recommended_movie_names.append(movies.iloc[i[0]].title)
+    return recommended_movie_names, recommended_movie_posters
 
-    return recommended_movie_names,recommended_movie_posters
-
-
+# Streamlit app UI
 st.header('Movie Recommender System')
-with open('movie_list.pkl', 'rb') as f:
-    movies = pd.read_pickle("movie_list.pkl")
-
-similarity = pickle.load(open('https://drive.google.com/file/d/1HCNOOnP4NgsKPb6qGqfbr-ekjx08VsvI/view?usp=sharing','rb'))
 
 movie_list = movies['title'].values
-selected_movie = st.selectbox(
-    "Type or select a movie from the dropdown (please wait a few seconds for the images to load)",
-    movie_list
-)
+selected_movie = st.selectbox("Type or select a movie from the dropdown", movie_list)
 
 if st.button('Show Recommendation'):
-    recommended_movie_names,recommended_movie_posters = recommend(selected_movie)
-    col1, col2, col3, col4, col5 = st.columns(5)
-    col6, col7, col8, col9, col10 = st.columns(5)
-    col11, col12, col13, col14, col15 = st.columns(5)
-    with col1:
-        st.text(recommended_movie_names[0])
-        st.image(recommended_movie_posters[0])
-    with col2:
-        st.text(recommended_movie_names[1])
-        st.image(recommended_movie_posters[1])
-
-    with col3:
-        st.text(recommended_movie_names[2])
-        st.image(recommended_movie_posters[2])
-    with col4:
-        st.text(recommended_movie_names[3])
-        st.image(recommended_movie_posters[3])
-    with col5:
-        st.text(recommended_movie_names[4])
-        st.image(recommended_movie_posters[4])
-    with col6:
-        st.text(recommended_movie_names[5])
-        st.image(recommended_movie_posters[5])
-    with col7:
-        st.text(recommended_movie_names[6])
-        st.image(recommended_movie_posters[6])
-
-    with col8:
-        st.text(recommended_movie_names[7])
-        st.image(recommended_movie_posters[7])
-    with col9:
-        st.text(recommended_movie_names[8])
-        st.image(recommended_movie_posters[8])
-    with col10:
-        st.text(recommended_movie_names[9])
-        st.image(recommended_movie_posters[9])
-
-    with col11:
-        st.text(recommended_movie_names[10])
-        st.image(recommended_movie_posters[10])
-    with col12:
-        st.text(recommended_movie_names[11])
-        st.image(recommended_movie_posters[11])
-
-    with col13:
-        st.text(recommended_movie_names[12])
-        st.image(recommended_movie_posters[12])
-    with col14:
-        st.text(recommended_movie_names[13])
-        st.image(recommended_movie_posters[13])
-    with col15:
-        st.text(recommended_movie_names[14])
-        st.image(recommended_movie_posters[14])
-
+    recommended_movie_names, recommended_movie_posters = recommend(selected_movie)
+    
+    # Display recommendations
+    cols = st.columns(5)
+    for idx in range(15):
+        col = cols[idx % 5]
+        with col:
+            st.text(recommended_movie_names[idx])
+            st.image(recommended_movie_posters[idx])
