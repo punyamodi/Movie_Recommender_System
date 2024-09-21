@@ -1,4 +1,7 @@
 # Movie_Recommender_System
+
+LIVE URL - https://bo6fqwrhupbw9c728dsf2d.streamlit.app/
+
 This is a movie recommender system built using Python and various machine learning libraries. It utilizes content-based filtering to make movie recommendations based on similarity of movie tags.
 
 <img width="1280" alt="image" src="https://github.com/punyamodi/Movie_Recommender_System/assets/68418104/10778d27-5eab-4fa7-9409-f67081134891">
